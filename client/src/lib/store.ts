@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export interface Transaction {
@@ -36,15 +36,15 @@ export const useStore = () => {
   const [data, setData] = useState<StoreData>(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) return JSON.parse(stored);
-    
+
     // Default quick items
     const defaultQuickItems: QuickItem[] = [
-      { id: "1", name: "Cerveja", price: 8 },
-      { id: "2", name: "Dose", price: 5 },
-      { id: "3", name: "Porção", price: 15 },
-      { id: "4", name: "Outro", price: 20 },
+      { id: "1", name: "Cerveja 600", price: 8 },
+      { id: "2", name: "Dose", price: 0.5 },
+      { id: "3", name: "Cerveja Lata", price: 3.5 },
+      { id: "4", name: "Cigarro", price: 5 },
     ];
-    
+
     return { customers: [], transactions: [], quickItems: defaultQuickItems };
   });
 
@@ -93,23 +93,25 @@ export const useStore = () => {
   };
 
   const addQuickItem = (item: Omit<QuickItem, "id">) => {
-    setData(prev => ({
+    setData((prev) => ({
       ...prev,
-      quickItems: [...prev.quickItems, { ...item, id: uuidv4() }]
+      quickItems: [...prev.quickItems, { ...item, id: uuidv4() }],
     }));
   };
 
   const updateQuickItem = (id: string, updates: Omit<QuickItem, "id">) => {
-    setData(prev => ({
+    setData((prev) => ({
       ...prev,
-      quickItems: prev.quickItems.map(item => item.id === id ? { ...item, ...updates } : item)
+      quickItems: prev.quickItems.map((item) =>
+        item.id === id ? { ...item, ...updates } : item
+      ),
     }));
   };
 
   const deleteQuickItem = (id: string) => {
-    setData(prev => ({
+    setData((prev) => ({
       ...prev,
-      quickItems: prev.quickItems.filter(item => item.id !== id)
+      quickItems: prev.quickItems.filter((item) => item.id !== id),
     }));
   };
 
@@ -122,14 +124,17 @@ export const useStore = () => {
   };
 
   const getLastTransactionDate = (customerId: string) => {
-     const customerTransactions = data.transactions
-      .filter((t) => t.customerId === customerId && t.type === 'credit');
-     
-     if (customerTransactions.length === 0) return null;
-     
-     // Sort by date descending
-     return customerTransactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0].date;
-  }
+    const customerTransactions = data.transactions.filter(
+      (t) => t.customerId === customerId && t.type === "credit"
+    );
+
+    if (customerTransactions.length === 0) return null;
+
+    // Sort by date descending
+    return customerTransactions.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    )[0].date;
+  };
 
   const exportData = () => {
     const dataStr = JSON.stringify(data);

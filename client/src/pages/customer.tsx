@@ -125,7 +125,7 @@ export default function CustomerDetails() {
   const handleDeleteCustomer = () => {
     deleteCustomer(customer.id);
     toast({ title: "Cliente removido" });
-    window.location.href = "/";
+    window.location.href = "/FiadoFacil";
   };
 
   return (

@@ -11,7 +11,7 @@
     "dev": "vite",
     "build": "vite build",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "npm run build && node script/copy-404.js && gh-pages -d client/dist"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
